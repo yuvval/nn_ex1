@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+import numpy as np
 import parse_caffe
 
 
@@ -28,3 +30,31 @@ for hp_id, comb in enumerate(hp):
     hp[hp_id]['test_accuracies'] = test_accuracies
 
 
+
+
+# plot SGD momentum comparison
+lgd = ['Momentum = %s'%comb['momentum'] for comb in hp[0:4]]
+fieldname = 'train_losses'
+plt.plot(hp[0][fieldname][:, 0], hp[0][fieldname][:, 1])
+plt.plot(hp[1][fieldname][:, 0], hp[1][fieldname][:, 1])
+plt.plot(hp[2][fieldname][:, 0], hp[2][fieldname][:, 1])
+plt.plot(hp[3][fieldname][:, 0], hp[3][fieldname][:, 1])
+plt.legend(lgd)
+plt.show()
+
+fieldname = 'test_losses'
+plt.plot(hp[0][fieldname][:, 0], hp[0][fieldname][:, 1])
+plt.plot(hp[1][fieldname][:, 0], hp[1][fieldname][:, 1])
+plt.plot(hp[2][fieldname][:, 0], hp[2][fieldname][:, 1])
+plt.plot(hp[3][fieldname][:, 0], hp[3][fieldname][:, 1])
+plt.legend(lgd)
+plt.show()
+
+
+fieldname = 'test_accuracies'
+plt.plot(hp[0][fieldname][:, 0], hp[0][fieldname][:, 1])
+plt.plot(hp[1][fieldname][:, 0], hp[1][fieldname][:, 1])
+plt.plot(hp[2][fieldname][:, 0], hp[2][fieldname][:, 1])
+plt.plot(hp[3][fieldname][:, 0], hp[3][fieldname][:, 1])
+plt.legend(lgd)
+plt.show()
