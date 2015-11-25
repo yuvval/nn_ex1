@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import parse_caffe
+import scipy.io
 
 
 hp = [] # hyper params
@@ -33,28 +34,48 @@ for hp_id, comb in enumerate(hp):
 
 
 # plot SGD momentum comparison
-lgd = ['Momentum = %s'%comb['momentum'] for comb in hp[0:4]]
-fieldname = 'train_losses'
-plt.plot(hp[0][fieldname][:, 0], hp[0][fieldname][:, 1])
-plt.plot(hp[1][fieldname][:, 0], hp[1][fieldname][:, 1])
-plt.plot(hp[2][fieldname][:, 0], hp[2][fieldname][:, 1])
-plt.plot(hp[3][fieldname][:, 0], hp[3][fieldname][:, 1])
-plt.legend(lgd)
-plt.show()
+legend_SGD = ['SGD, Momentum = %s'%comb['momentum'] for comb in hp[0:4]]
 
-fieldname = 'test_losses'
-plt.plot(hp[0][fieldname][:, 0], hp[0][fieldname][:, 1])
-plt.plot(hp[1][fieldname][:, 0], hp[1][fieldname][:, 1])
-plt.plot(hp[2][fieldname][:, 0], hp[2][fieldname][:, 1])
-plt.plot(hp[3][fieldname][:, 0], hp[3][fieldname][:, 1])
-plt.legend(lgd)
-plt.show()
+legend_AGAGRAD = ['SGD, Momentum = 0.9', 'ADAGRAD']
+
+legend_NEST = ['NESTEROV, Momentum = %s'%comb['momentum'] for comb in hp[5:7]]
+legend_NEST += ['SGD, Momentum = 0.9']
+
+legend_SGD_LR = ['SGD, base\_lr = %s'%comb['base_lr'] for comb in hp[7:9]]
+legend_SGD_LR += ['SGD, base\_lr = 0.01']
+
+results = {'hp': hp,
+           'legend_SGD': legend_SGD,
+           'legend_AGAGRAD': legend_AGAGRAD,
+           'legend_NEST': legend_NEST,
+           'legend_SGD_LR': legend_SGD_LR,
+           }
+
+scipy.io.savemat('Q1_parse_results' + ab_select + '.mat', results)
 
 
-fieldname = 'test_accuracies'
-plt.plot(hp[0][fieldname][:, 0], hp[0][fieldname][:, 1])
-plt.plot(hp[1][fieldname][:, 0], hp[1][fieldname][:, 1])
-plt.plot(hp[2][fieldname][:, 0], hp[2][fieldname][:, 1])
-plt.plot(hp[3][fieldname][:, 0], hp[3][fieldname][:, 1])
-plt.legend(lgd)
-plt.show()
+
+# fieldname = 'train_losses'
+# plt.plot(hp[0][fieldname][:, 0], hp[0][fieldname][:, 1])
+# plt.plot(hp[1][fieldname][:, 0], hp[1][fieldname][:, 1])
+# plt.plot(hp[2][fieldname][:, 0], hp[2][fieldname][:, 1])
+# plt.plot(hp[3][fieldname][:, 0], hp[3][fieldname][:, 1])
+# plt.legend(lgd)
+# plt.show()
+#
+# fieldname = 'test_losses'
+# plt.plot(hp[0][fieldname][:, 0], hp[0][fieldname][:, 1])
+# plt.plot(hp[1][fieldname][:, 0], hp[1][fieldname][:, 1])
+# plt.plot(hp[2][fieldname][:, 0], hp[2][fieldname][:, 1])
+# plt.plot(hp[3][fieldname][:, 0], hp[3][fieldname][:, 1])
+# plt.legend(lgd)
+# plt.show()
+#
+#
+# fieldname = 'test_accuracies'
+# plt.plot(hp[0][fieldname][:, 0], hp[0][fieldname][:, 1])
+# plt.plot(hp[1][fieldname][:, 0], hp[1][fieldname][:, 1])
+# plt.plot(hp[2][fieldname][:, 0], hp[2][fieldname][:, 1])
+# plt.plot(hp[3][fieldname][:, 0], hp[3][fieldname][:, 1])
+# plt.legend(lgd)
+# plt.show()
