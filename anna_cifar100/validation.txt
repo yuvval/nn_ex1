@@ -1,0 +1,1 @@
+/home/lab/yuvval/nn_ex1/cifar100/cifar100_validation.hdf5
