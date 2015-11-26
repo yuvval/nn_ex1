@@ -99,6 +99,7 @@ layer {
   bottom: "ip1"
   top: "ip1"
 }
+
 layer {
   name: "ip2"
   type: "InnerProduct"
