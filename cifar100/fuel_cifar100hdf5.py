@@ -8,6 +8,7 @@ from six.moves import cPickle
 
 from fuel.converters.base import fill_hdf5_file, check_exists
 
+
 DISTRIBUTION_FILE = '/home/lab/yuvval/nn_ex1/cifar100/cifar-100-python.tar.gz'
 
 
@@ -34,8 +35,10 @@ def convert_cifar100(directory, output_directory,
         Single-element tuple containing the path to the converted dataset.
     """
     output_train = os.path.join(output_directory, output_filename + '_train.hdf5')
+    output_val = os.path.join(output_directory, output_filename + '_validation.hdf5')
     output_test = os.path.join(output_directory, output_filename + '_test.hdf5')
     h5file_train = h5py.File(output_train, mode="w")
+    h5file_val = h5py.File(output_val, mode="w")
     h5file_test = h5py.File(output_test, mode="w")
     input_file = os.path.join(directory, 'cifar-100-python.tar.gz')
     tar_file = tarfile.open(input_file, 'r:gz')
@@ -49,12 +52,21 @@ def convert_cifar100(directory, output_directory,
     finally:
         file.close()
 
-    train_features = train['data'].reshape(train['data'].shape[0],
+    alltrain_data = train['data'].reshape(train['data'].shape[0],
                                            3, 32, 32)
-    train_coarse_labels = numpy.array(train['coarse_labels'],
+    alltrain_coarse_labels = numpy.array(train['coarse_labels'],
                                       dtype=numpy.uint8)
-    train_fine_labels = numpy.array(train['fine_labels'],
+    alltrain_fine_labels = numpy.array(train['fine_labels'],
                                     dtype=numpy.uint8)
+
+    train_data = alltrain_data[0:40000,:,:,:]
+    val_data = alltrain_data[40000:,:,:,:]
+
+    train_coarse_labels = alltrain_coarse_labels[0:40000]
+    val_coarse_labels = alltrain_coarse_labels[40000:]
+
+    train_fine_labels = alltrain_fine_labels[0:40000]
+    val_fine_labels = alltrain_fine_labels[40000:]
 
     file = tar_file.extractfile('cifar-100-python/test')
     try:
@@ -65,45 +77,29 @@ def convert_cifar100(directory, output_directory,
     finally:
         file.close()
 
-    test_features = test['data'].reshape(test['data'].shape[0],
+    test_data = test['data'].reshape(test['data'].shape[0],
                                          3, 32, 32)
     test_coarse_labels = numpy.array(test['coarse_labels'], dtype=numpy.uint8)
     test_fine_labels = numpy.array(test['fine_labels'], dtype=numpy.uint8)
 
-    data_train = (('train', 'features', train_features),
-            ('train', 'coarse_labels', train_coarse_labels.reshape((-1, 1))),
-            ('train', 'fine_labels', train_fine_labels.reshape((-1, 1))))
-    data_test = (('test', 'features', test_features),
-            ('test', 'coarse_labels', test_coarse_labels.reshape((-1, 1))),
-            ('test', 'fine_labels', test_fine_labels.reshape((-1, 1))))
 
-
-    h5file_train.create_dataset("data", data=train_features.astype(float)/255)
+    h5file_train.create_dataset("data", data=train_data.astype(float)/255)
     h5file_train.create_dataset("fine_labels", data=train_fine_labels.reshape((-1, 1)).astype(float))
     h5file_train.create_dataset("coarse_labels", data=train_coarse_labels.reshape((-1, 1)).astype(float))
     h5file_train.flush()
     h5file_train.close()
-    h5file_test.create_dataset("data", data=test_features.astype(float)/255)
+
+    h5file_val.create_dataset("data", data=val_data.astype(float)/255)
+    h5file_val.create_dataset("fine_labels", data=val_fine_labels.reshape((-1, 1)).astype(float))
+    h5file_val.create_dataset("coarse_labels", data=val_coarse_labels.reshape((-1, 1)).astype(float))
+    h5file_val.flush()
+    h5file_val.close()
+
+    h5file_test.create_dataset("data", data=test_data.astype(float)/255)
     h5file_test.create_dataset("fine_labels", data=test_fine_labels.reshape((-1, 1)).astype(float))
     h5file_test.create_dataset("coarse_labels", data=test_coarse_labels.reshape((-1, 1)).astype(float))
     h5file_test.flush()
     h5file_test.close()
-
-    # fill_hdf5_file(h5file_train, data_train)
-    # fill_hdf5_file(h5file_test, data_test)
-    #
-    # for h5file in [h5file_train, h5file_test] :
-    #     h5file['features'].dims[0].label = 'batch'
-    #     h5file['features'].dims[1].label = 'channel'
-    #     h5file['features'].dims[2].label = 'height'
-    #     h5file['features'].dims[3].label = 'width'
-    #     h5file['coarse_labels'].dims[0].label = 'batch'
-    #     h5file['coarse_labels'].dims[1].label = 'index'
-    #     h5file['fine_labels'].dims[0].label = 'batch'
-    #     h5file['fine_labels'].dims[1].label = 'index'
-    #
-    #     h5file.flush()
-    #     h5file.close()
 
     return (output_train,output_test)
 
