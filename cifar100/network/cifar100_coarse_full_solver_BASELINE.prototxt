@@ -21,8 +21,8 @@ lr_policy: "fixed"
 # Display every 200 iterations
 display: 200
 # The maximum number of iterations
-max_iter: 50000
+max_iter: 15000
 # snapshot intermediate results
-snapshot: 5000
+snapshot: 1000
 # solver mode: CPU or GPU
 solver_mode: GPU

@@ -5,10 +5,11 @@ import os
 #momentum: 0.9
 
 hp = [] # hyper params
-hp += [{'solver_type' : 'SGD', 'base_lr' : '0.00001'}]
-hp += [{'solver_type' : 'SGD', 'base_lr' : '0.0001'}]
-hp += [{'solver_type' : 'SGD', 'base_lr' : '0.001'}]
-hp += [{'solver_type' : 'SGD', 'base_lr' : '0.01'}]
+#hp += [{'solver_type' : 'SGD', 'base_lr' : '0.001', 'weight_decay': 0.000004}]
+#hp += [{'solver_type' : 'SGD', 'base_lr' : '0.001', 'weight_decay': 0.0000004}]
+hp += [{'solver_type' : 'SGD', 'base_lr' : '0.001', 'weight_decay': 4e-08}]
+hp += [{'solver_type' : 'SGD', 'base_lr' : '0.001', 'weight_decay': 4e-09}]
+
 
 for ab_select in ['']:
 

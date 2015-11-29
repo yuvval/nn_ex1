@@ -179,6 +179,16 @@ layer {
   top: "conv3"
 }
 layer {
+  name: "drop_conv3c"
+  type: "Dropout"
+  bottom: "conv3"
+  top: "conv3"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+
+layer {
   name: "pool3"
   type: "Pooling"
   bottom: "conv3"
@@ -213,6 +223,7 @@ layer {
     }
   }
 }
+
 layer {
   name: "accuracy_coarse"
   type: "Accuracy"
