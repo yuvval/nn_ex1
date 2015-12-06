@@ -8,6 +8,8 @@ from six.moves import cPickle
 
 from fuel.converters.base import fill_hdf5_file, check_exists
 
+import pdb
+
 
 DISTRIBUTION_FILE = '/home/lab/yuvval/nn_ex1/cifar100/cifar-100-python.tar.gz'
 
@@ -54,6 +56,7 @@ def convert_cifar100(directory, output_directory,
 
     alltrain_data = train['data'].reshape(train['data'].shape[0],
                                            3, 32, 32)
+
     alltrain_coarse_labels = numpy.array(train['coarse_labels'],
                                       dtype=numpy.uint8)
     alltrain_fine_labels = numpy.array(train['fine_labels'],
